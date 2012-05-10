@@ -1,1 +1,0 @@
-This branch tests the pull requests made by contributors before putting them on the master branch.
