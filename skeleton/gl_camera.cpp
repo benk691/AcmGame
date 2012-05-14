@@ -85,6 +85,8 @@ vector3 gl_camera::get_focal_point() const
     return focal_point;
 }
 
+#define PI 3.14159265358979323846264338328
+
 vector3 gl_camera::get_position() const
 {
     vector3 p;
@@ -96,7 +98,7 @@ vector3 gl_camera::get_position() const
     p[0] = p[1] = 0.0;
 
     // rotate about x
-    b = -get_elevation() / 180.0 * M_PI;
+    b = -get_elevation() / 180.0 * PI;
     t1 = cos(b)*p[1] - sin(b)*p[2];
     t2 = sin(b)*p[1] + cos(b)*p[2];
 
@@ -128,7 +130,7 @@ vector3 gl_camera::get_target() const
 vector3 gl_camera::get_up() const
 {
     vector3 up;
-    up.cross(get_right(), get_target());
+    up = get_right().cross(get_target());//up.cross(get_right(), get_target());
     return up;
 }
 
@@ -136,7 +138,7 @@ vector3 gl_camera::get_right() const
 {
     vector3 Y(0,1,0);
     vector3 right;
-    right.cross(get_target(), Y);
+    right = get_target().cross(Y);//right.cross(get_target(), Y);
     right.normalize();
     return right;
 }
