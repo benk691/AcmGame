@@ -4,7 +4,6 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>
-#include <memory>
 #include <iostream>
 
 class vector3
@@ -85,11 +84,19 @@ public:
         scale(1/m);
     }
 
+    vector3 cross(const vector3& v) const
+    {
+        return vector3(p[1]*v[2] - v[1]*p[2],
+                       p[2]*v[0] - v[0]*p[2],
+                       p[0]*v[1] - v[1]*p[0]);
+    }
+    
+    /*
     void cross(const vector3& u, const vector3& v) {
         p[0] = u[1]*v[2] - u[2]*v[1]; 
         p[1] = u[2]*v[0] - u[0]*v[2]; 
         p[2] = u[0]*v[1] - u[1]*v[0]; 
-    }
+    }*/
     
     vector3& operator=(const vector3& v) 
     {
