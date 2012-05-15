@@ -5,6 +5,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <iostream>
+#include <vector>
 //#include "mesh.h"
 
 class Object
@@ -18,6 +19,7 @@ class Object
         double roll;
         double yaw;
         //Mesh mesh;
+        std::vector< Object > attachments;
         const unsigned int objId;
 
     public:
