@@ -3,6 +3,7 @@
     held at UC Riverside.
 ===========================================================
 
+Do not make, the make system is not done yet.
 To compile the code just run make in the "AcmGame" directory.
 To execute the code run ./play in the "AcmGame" directory.
 
