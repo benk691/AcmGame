@@ -14,6 +14,8 @@ using namespace std;
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include "lib/input.h"
+
 void draw_grid();
 
 application::application()
@@ -69,6 +71,9 @@ void application::init_event()
 // triggered each time the application needs to redraw
 void application::draw_event()
 {
+    Input::nextFrame();
+    if(Input::down(Key::quit)) exit(0);
+
     // apply our camera transformation
     camera.apply_gl_transform();
 
@@ -94,7 +99,7 @@ void application::draw_event()
 
     for(unsigned int i = 0; i < vehicles.size(); ++i){
         if(vehicles[i].use_keys)
-            vehicles[i].draw(t.elapsed()*180,up_1,down_1,left_1,right_1,left_d1,right_d1);
+            vehicles[i].draw(t.elapsed()*180, Input::down(Key::moveForward), Input::down(Key::moveBackward), Input::down(Key::turnLeft), Input::down(Key::turnRight), Input::down(Key::moveLeft), Input::down(Key::moveRight));//up_1,down_1,left_1,right_1,left_d1,right_d1);
         else
             vehicles[i].draw(t.elapsed()*180,up_2,down_2,left_2,right_2,left_d2,right_d2);
     }
