@@ -1,18 +1,6 @@
-CXX=g++
-CXXFLAGS = -O2
-CPPFLAGS = -g -Wall
-LIBS  = -lGL -lGLU -lglut
-#LIBS = -lmingw32 -lglut32 -lopengl32 -lglu32
-
-export CXX
-export CXXFLAGS
-export CPPFLAGS
-export LIBS
-
-OBJS=bin/main.o
-SUBDIRS=bin lib
+SUBDIRS=common controller effects game resources testbestbench
 CLEANDIRS=$(SUBDIRS:%=clean-%)
-TARGET=play
+TARGET=game.o
 
 all: $(TARGET)
 

@@ -1,11 +1,12 @@
 SRC=main.cpp
-OBJS=main.o
+OBJS=game.o
+TARGET=main.o
 
 all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(OBJS)
+	$(CXX) $(CXXLFAGS) $(CPPFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 clean:
 	rm -rf *.o *~ #*
 
-.PHONY: all clean $(OBJS)
+.PHONY: all clean $(OBJS) $(TARGET)
 
