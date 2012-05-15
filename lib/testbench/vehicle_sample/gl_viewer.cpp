@@ -9,6 +9,8 @@ using namespace std;
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include "lib/input.h"
+
 gl_viewer* gl_viewer::singleton = NULL;
 
 gl_viewer::gl_viewer()
@@ -37,16 +39,16 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     glutDisplayFunc(&gl_viewer::glut_display_event_wrapper);
 
     // called when Glut has detected a mouse click
-    glutMouseFunc(&gl_viewer::glut_mouse_click_event_wrapper);
+    //glutMouseFunc(&gl_viewer::glut_mouse_click_event_wrapper);
 
     // called when Glut has detected mouse motion
-    glutMotionFunc(&gl_viewer::glut_mouse_move_event_wrapper);
+    //glutMotionFunc(&gl_viewer::glut_mouse_move_event_wrapper);
 
     // called when Glut has key input
-    glutKeyboardFunc(&gl_viewer::glut_keyboard_event_wrapper);
+    //glutKeyboardFunc(&gl_viewer::glut_keyboard_event_wrapper);
 
     // called when Glut has key input
-    glutKeyboardUpFunc(&gl_viewer::glut_keyboard_up_event_wrapper);
+    //glutKeyboardUpFunc(&gl_viewer::glut_keyboard_up_event_wrapper);
 
     // called when GLUT has nothing to do
     glutIdleFunc(&gl_viewer::glut_display_event_wrapper);
@@ -62,6 +64,15 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     this->width = width;
     this->height = height;
     first_click = true;
+    
+    Input::initialize();
+    Input::mapKey(PhysicalKey('w', PhysicalKey::NORMAL_KEY), Key::moveForward);
+    Input::mapKey(PhysicalKey('s', PhysicalKey::NORMAL_KEY), Key::moveBackward);
+    Input::mapKey(PhysicalKey('a', PhysicalKey::NORMAL_KEY), Key::turnLeft);
+    Input::mapKey(PhysicalKey('d', PhysicalKey::NORMAL_KEY), Key::turnRight);
+    Input::mapKey(PhysicalKey('q', PhysicalKey::NORMAL_KEY), Key::moveLeft); //open the left door
+    Input::mapKey(PhysicalKey('e', PhysicalKey::NORMAL_KEY), Key::moveRight); //open the right door
+    Input::mapKey(PhysicalKey(GLUT_KEY_F1, PhysicalKey::SPECIAL_KEY), Key::quit);
 }
 
 void gl_viewer::run()
