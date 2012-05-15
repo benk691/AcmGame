@@ -10,6 +10,11 @@ std::vector <int> Input::dirtyKeysHeld;
 std::vector <int> Input::keysPressed;
 std::vector <int> Input::dirtyKeysPressed;
 
+int Input::x;
+int Input::y;
+int Input::dirtyX;
+int Input::dirtyY;
+
 void processNormalKeyDown(unsigned char key, int x, int y)
 {
     PhysicalKey pk(key, PhysicalKey::NORMAL_KEY);
@@ -43,6 +48,11 @@ void processMouseButton(int button, int state, int x, int y)
         Input::updateKeyUp(pk);
 }
 
+void processMouseMotion(int x, int y)
+{
+    Input::updateMousePosition(300 - x, 300 - y);
+}
+
 void Input::initialize()
 {
     glutKeyboardFunc(processNormalKeyDown);
@@ -50,6 +60,8 @@ void Input::initialize()
     glutSpecialFunc(processSpecialKeyDown);
     glutSpecialUpFunc(processSpecialKeyUp);
     glutMouseFunc(processMouseButton);
+    glutMotionFunc(processMouseMotion);
+    glutPassiveMotionFunc(processMouseMotion);
     
     glutSetCursor(GLUT_CURSOR_NONE);
 }
@@ -66,6 +78,9 @@ void Input::nextFrame()
     
     keysPressed.clear();
     keysPressed.swap(dirtyKeysPressed);
+    
+    x = dirtyX;
+    y = dirtyY;
     
     glutWarpPointer(300, 300);
 }
@@ -122,12 +137,17 @@ bool Input::pressed(int key)
 void Input::updateKeyUp(const PhysicalKey& pk)
 {
     std::multimap <PhysicalKey, int>::iterator it = Input::keyMap.find(pk);
-    std::vector <int>::iterator i = std::find(Input::dirtyKeysHeld.begin(), Input::dirtyKeysHeld.end(), it->second);
-    while(i != Input::dirtyKeysHeld.end())
+    while(it != keyMap.end() && it->first == pk)
     {
-        Input::dirtyKeysHeld.erase(i);
-        //keysPressed is intentionally not updated here
-        i = std::find(Input::dirtyKeysHeld.begin(), Input::dirtyKeysHeld.end(), it->second);
+        std::vector <int>::iterator i = std::find(Input::dirtyKeysHeld.begin(), Input::dirtyKeysHeld.end(), it->second);
+        while(i != Input::dirtyKeysHeld.end())
+        {
+            Input::dirtyKeysHeld.erase(i);
+            //keysPressed is intentionally not updated here
+            i = std::find(Input::dirtyKeysHeld.begin(), Input::dirtyKeysHeld.end(), it->second);
+        }
+        
+        ++it;
     }
 }
 
@@ -137,7 +157,24 @@ void Input::updateKeyDown(const PhysicalKey& pk)
     while(it != Input::keyMap.end() && it->first == pk)
     {
         Input::dirtyKeysHeld.push_back(it->second);
-        Input::dirtyKeysPressed.push_back(it->second);
+        if(std::find(keysHeld.begin(), keysHeld.end(), it->second) == keysHeld.end())
+            Input::dirtyKeysPressed.push_back(it->second);
         ++it;
     }
+}
+
+void Input::updateMousePosition(int x, int y)
+{
+    Input::dirtyX = x;
+    Input::dirtyY = y;
+}
+
+int Input::mouseX()
+{
+    return x;
+}
+
+int Input::mouseY()
+{
+    return y;
 }

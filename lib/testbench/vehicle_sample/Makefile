@@ -1,8 +1,8 @@
 CXX = g++
-CXXFLAGS = -O3
-CPPFLAGS = -Wall -g
-#LIBS  = -lGL -lGLU -lglut
-LIBS = -lmingw32 -lglut32 -lopengl32 -lglu32
+CXXFLAGS = -O3 -funroll-loops -fomit-frame-pointer
+CPPFLAGS = -Wall -s -std=c++03
+LIBS  = -lGL -lGLU -lglut
+#LIBS = -lmingw32 -lglut32 -lopengl32 -lglu32
 OBJS  = gl_viewer.o gl_camera.o main.o application.o timer.o lib/door.o lib/vehicle.o lib/input.o
 SRCS = gl_viewer.cpp gl_camera.cpp main.cpp application.cpp timer.cpp lib/door.cpp lib/vehicle.cpp lib/input.cpp
 TARGET = transform

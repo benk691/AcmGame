@@ -6,6 +6,7 @@
 
 //This is really a strongly typed enum
 //Whenever you request the status of a key, use one of these values as the argument.
+//Please use the actual name, not the number.
 struct Key
 {
     #define SCI static const int
@@ -47,6 +48,7 @@ struct Key
 //Note that 'A' is not the same as 'a'.
 //For nonalphanumeric keys, use PhysicalKey::SPECIAL_KEY as the type and use glut's enum value for the value.
 //For mouse buttons, use the glut enum value and PhysicalKey::MOUSE_BUTTON.
+//This will ordinarily just be used as a key for the keymap.
 class PhysicalKey
 {
     int v;
@@ -83,7 +85,6 @@ public:
     static const int MOUSE_BUTTON = 2;
 };
 
-//TODO: detect mouse motion
 class Input
 {
     typedef int KEY;
@@ -98,21 +99,31 @@ public:
     static bool down(KEY);    //returns whether the key is held
     static bool pressed(KEY); //returns whether the key was pressed during the last frame
     
+    static int mouseX(); //movement of the mouse in pixels this frame (relative)
+    static int mouseY();
+    
 private:
     static void updateKeyUp(const PhysicalKey&);
     static void updateKeyDown(const PhysicalKey&);
+    static void updateMousePosition(int x, int y);
 
     friend void processNormalKeyDown(unsigned char key, int x, int y);
     friend void processNormalKeyUp(unsigned char key, int x, int y);
     friend void processSpecialKeyDown(int key, int x, int y);
     friend void processSpecialKeyUp(int key, int x, int y);
     friend void processMouseButton(int button, int state, int x, int y);
+    friend void processMouseMotion(int x, int y);
 
     static std::multimap <PhysicalKey, KEY> keyMap;
     static std::vector <KEY> keysHeld;
     static std::vector <KEY> dirtyKeysHeld;
     static std::vector <KEY> keysPressed;
     static std::vector <KEY> dirtyKeysPressed;
+    
+    static int x;
+    static int y;
+    static int dirtyX;
+    static int dirtyY;
 };
 
 #endif
