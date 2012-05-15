@@ -4,24 +4,26 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include "mesh.h"
+#include <iostream>
+//#include "mesh.h"
 
 class Object
 {
     public:
-        static unsigned int objId = 0;
+        static unsigned int curObjId;
         double x;
         double y;
         double z;
         double pitch;
         double roll;
         double yaw;
-        const unsigned int id;
+        //Mesh mesh;
+        const unsigned int objId;
 
     public:
         Object();
 
-        virtual ~Object() = 0;
+        virtual ~Object() {};
 
         virtual void draw() = 0;
 
