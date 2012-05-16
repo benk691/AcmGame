@@ -1,0 +1,2 @@
+TODO:
+    (1) Make socket communication between computers
