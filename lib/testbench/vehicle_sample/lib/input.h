@@ -7,6 +7,9 @@
 //This is really a strongly typed enum
 //Whenever you request the status of a key, use one of these values as the argument.
 //Please use the actual name, not the number.
+//These are just names.  They carry no significance beyond how you use them.
+//If you need another key name, go ahead and add it.
+//Just make sure every key has its own number and never change existing numbers.
 struct Key
 {
     #define SCI static const int
@@ -33,12 +36,21 @@ struct Key
     SCI flyDown = 20;
     SCI lookUp = 21;
     SCI lookDown = 22;
-    SCI lookLeft = 23;  //NOT the same as turnLeft
-    SCI lookRight = 24; //NOT the same as turnRight
+    SCI lookLeft = 23;
+    SCI lookRight = 24;
     SCI pause = 25;
     SCI chat = 26;
     SCI map = 27;
     SCI quit = 28;
+    SCI leftDoor = 29;
+    SCI rightDoor = 30;
+    SCI car2moveForward = 31;
+    SCI car2moveBackward = 32;
+    SCI car2turnLeft = 33;
+    SCI car2turnRight = 34;
+    SCI car2leftDoor = 35;
+    SCI car2rightDoor = 36;
+    
     #undef SCI
 };
 
@@ -78,12 +90,13 @@ public:
     {
         return t == rhs.t && v == rhs.v;
     }
-    
-    //use these as arguments for the type parameter of the constructor
-    static const int NORMAL_KEY = 0;
-    static const int SPECIAL_KEY = 1;
-    static const int MOUSE_BUTTON = 2;
 };
+
+//use these as arguments for the type parameter of the constructor
+static const int NORMAL_KEY = 0;
+static const int SPECIAL_KEY = 1;
+static const int MOUSE_BUTTON = 2;
+
 
 class Input
 {
@@ -98,6 +111,10 @@ public:
     
     static bool down(KEY);    //returns whether the key is held
     static bool pressed(KEY); //returns whether the key was pressed during the last frame
+    
+    static bool isCursorLocked();
+    static void lockCursor();
+    static void unlockCursor();
     
     static int mouseX(); //movement of the mouse in pixels this frame (relative)
     static int mouseY();
@@ -119,6 +136,8 @@ private:
     static std::vector <KEY> dirtyKeysHeld;
     static std::vector <KEY> keysPressed;
     static std::vector <KEY> dirtyKeysPressed;
+    
+    static bool cursorLocked;
     
     static int x;
     static int y;

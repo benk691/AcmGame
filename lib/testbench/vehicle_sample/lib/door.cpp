@@ -5,14 +5,15 @@
 
 Door::Door()
 :width(2), height(1.4), depth(.1), open_out(false), open_angle(50), open_speed(.3),
- current_angle(0), rel_x(0), rel_y(0), rel_z(0), free(false), pitch(0)
+ current_angle(0), opening(false), rel_x(0), rel_y(0), rel_z(0), free(false), pitch(0)
 {}
 Door::~Door()
 {}
 
-void Door::update(bool open){
+void Door::update(bool toggle){
     if(not free){
-        if(open){
+        if(toggle) opening = !opening;
+        if(opening){
             if(current_angle < open_angle)
                 current_angle += open_speed;
         }

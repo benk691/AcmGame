@@ -30,8 +30,9 @@ application::~application()
 // triggered once after the OpenGL context is initialized
 void application::init_event()
 {
-    cout << "CAMERA CONTROLS: \n  LMB: Rotate \n  MMB: Pan \n  LMB: Dolly" << endl;
-    cout << "KEYBOARD CONTROLS: \n  '=': Toggle wireframe mode" << endl;
+    //cout << "CAMERA CONTROLS: \n  LMB: Rotate \n  MMB: Pan \n  LMB: Dolly" << endl;
+    //cout << "KEYBOARD CONTROLS: \n  '=': Toggle wireframe mode" << endl;
+    cout << "CONTROLS:\n WASD: move \n QE: open doors \n F1: quit" << endl;
 
     const GLfloat ambient[] = { 0.15, 0.15, 0.15, 1.0 };
     const GLfloat diffuse[] = { 0.6, 0.6, 0.6, 1.0 };
@@ -99,9 +100,9 @@ void application::draw_event()
 
     for(unsigned int i = 0; i < vehicles.size(); ++i){
         if(vehicles[i].use_keys)
-            vehicles[i].draw(t.elapsed()*180, Input::down(Key::moveForward), Input::down(Key::moveBackward), Input::down(Key::turnLeft), Input::down(Key::turnRight), Input::down(Key::moveLeft), Input::down(Key::moveRight));//up_1,down_1,left_1,right_1,left_d1,right_d1);
+            vehicles[i].draw(t.elapsed()*180, Input::down(Key::moveForward), Input::down(Key::moveBackward), Input::down(Key::turnLeft), Input::down(Key::turnRight), Input::pressed(Key::leftDoor), Input::pressed(Key::rightDoor));
         else
-            vehicles[i].draw(t.elapsed()*180,up_2,down_2,left_2,right_2,left_d2,right_d2);
+            vehicles[i].draw(t.elapsed()*180,Input::down(Key::car2moveForward),Input::down(Key::car2moveBackward),Input::down(Key::car2turnLeft),Input::down(Key::car2turnRight),Input::pressed(Key::car2leftDoor),Input::pressed(Key::car2rightDoor));
     }
 }
 // triggered when mouse is clicked

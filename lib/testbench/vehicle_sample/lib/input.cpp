@@ -10,6 +10,8 @@ std::vector <int> Input::dirtyKeysHeld;
 std::vector <int> Input::keysPressed;
 std::vector <int> Input::dirtyKeysPressed;
 
+bool Input::cursorLocked;
+
 int Input::x;
 int Input::y;
 int Input::dirtyX;
@@ -17,31 +19,31 @@ int Input::dirtyY;
 
 void processNormalKeyDown(unsigned char key, int x, int y)
 {
-    PhysicalKey pk(key, PhysicalKey::NORMAL_KEY);
+    PhysicalKey pk(key, NORMAL_KEY);
     Input::updateKeyDown(pk);
 }
 
 void processNormalKeyUp(unsigned char key, int x, int y)
 {
-    PhysicalKey pk(key, PhysicalKey::NORMAL_KEY);
+    PhysicalKey pk(key, NORMAL_KEY);
     Input::updateKeyUp(pk);
 }
 
 void processSpecialKeyDown(int key, int x, int y)
 {
-    PhysicalKey pk(key, PhysicalKey::SPECIAL_KEY);
+    PhysicalKey pk(key, SPECIAL_KEY);
     Input::updateKeyDown(pk);
 }
 
 void processSpecialKeyUp(int key, int x, int y)
 {
-    PhysicalKey pk(key, PhysicalKey::SPECIAL_KEY);
+    PhysicalKey pk(key, SPECIAL_KEY);
     Input::updateKeyUp(pk);
 }
 
 void processMouseButton(int button, int state, int x, int y)
 {
-    PhysicalKey pk(button, PhysicalKey::MOUSE_BUTTON);
+    PhysicalKey pk(button, MOUSE_BUTTON);
     if(state == GLUT_DOWN)
         Input::updateKeyDown(pk);
     if(state == GLUT_UP)
@@ -50,7 +52,8 @@ void processMouseButton(int button, int state, int x, int y)
 
 void processMouseMotion(int x, int y)
 {
-    Input::updateMousePosition(300 - x, 300 - y);
+    if(Input::cursorLocked) Input::updateMousePosition(300 - x, 300 - y);
+    else Input::updateMousePosition(x, y);
 }
 
 void Input::initialize()
@@ -63,7 +66,7 @@ void Input::initialize()
     glutMotionFunc(processMouseMotion);
     glutPassiveMotionFunc(processMouseMotion);
     
-    glutSetCursor(GLUT_CURSOR_NONE);
+    lockCursor();
 }
 
 void Input::nextFrame()
@@ -82,7 +85,7 @@ void Input::nextFrame()
     x = dirtyX;
     y = dirtyY;
     
-    glutWarpPointer(300, 300);
+    if(cursorLocked) glutWarpPointer(300, 300);
 }
 
 void Input::mapKey(const PhysicalKey& pk, int key)
@@ -177,4 +180,25 @@ int Input::mouseX()
 int Input::mouseY()
 {
     return y;
+}
+
+bool Input::isCursorLocked()
+{
+    return cursorLocked;
+}
+
+void Input::lockCursor()
+{
+    if(cursorLocked) return;
+    
+    cursorLocked = true;
+    glutSetCursor(GLUT_CURSOR_NONE);
+}
+
+void Input::unlockCursor()
+{
+    if(!cursorLocked) return;
+    
+    cursorLocked = false;
+    glutSetCursor(GLUT_CURSOR_INHERIT);
 }

@@ -7,6 +7,14 @@
 Vehicle::Vehicle()
 :use_keys(false), x_pos(0), y_pos(0), z_pos(0), direction(0.0), speed (0), turn (0.0)
 {
+    wheels[0] = Tire();
+    wheels[1] = Tire();
+    wheels[2] = Tire();
+    wheels[3] = Tire();
+    
+    doors[0] = Door();
+    doors[1] = Door();
+
     doors[0].set_open_out(true);
     doors[1].set_open_out(false);
 
@@ -16,6 +24,14 @@ Vehicle::Vehicle()
 Vehicle::Vehicle(bool keys, double x, double y, double z)
 :use_keys(keys), x_pos(x), y_pos(y), z_pos(z), direction(0.0), speed (0), turn (0.0)
 {
+    wheels[0] = Tire();
+    wheels[1] = Tire();
+    wheels[2] = Tire();
+    wheels[3] = Tire();
+    
+    doors[0] = Door();
+    doors[1] = Door();
+
     doors[0].set_open_out(true);
     doors[1].set_open_out(false);
 
@@ -40,9 +56,9 @@ void Vehicle::draw(double counter,bool up, bool down, bool left, bool right, boo
     direction += 11*speed*sin(turn*0.0174532925);
 
     //fix the direction to keep nice ranges
-    if(direction > 360)
+    while(direction > 360)
         direction -= 360;
-    if(direction < 0)
+    while(direction < 0)
         direction += 360;
 
     if(up)
