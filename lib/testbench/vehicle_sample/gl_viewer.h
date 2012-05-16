@@ -83,8 +83,6 @@ class gl_viewer
         static void glut_mouse_move_event_wrapper(
             int x, int y
             );
-        static void glut_keyboard_event_wrapper(unsigned char key, int x, int y);
-        static void glut_keyboard_up_event_wrapper(unsigned char key, int x, int y);
         static void glut_reshape_event_wrapper(int width, int height);
 
         static gl_viewer* singleton;
