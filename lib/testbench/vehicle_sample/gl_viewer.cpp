@@ -70,12 +70,6 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     Input::mapKey(PhysicalKey('o', NORMAL_KEY), Key::car2rightDoor);
 }
 
-void gl_viewer::run()
-{
-    // pass execution to Glut. Now Glut is in control of the main loop.
-    glutMainLoop();
-}
-
 void gl_viewer::glut_display_event_wrapper()
 {
     // clear our color buffer
@@ -89,6 +83,12 @@ void gl_viewer::glut_display_event_wrapper()
     // swap the back buffer with the front (user always sees front
     // buffer on display)
     glutSwapBuffers();
+}
+
+void gl_viewer::run()
+{
+    // pass execution to Glut. Now Glut is in control of the main loop.
+    glutMainLoop();
 }
 
 void gl_viewer::glut_mouse_click_event_wrapper(int button, int state, int x, int y)
