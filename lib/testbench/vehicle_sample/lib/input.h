@@ -19,8 +19,8 @@ struct Key
     SCI moveRight = 3;
     SCI turnLeft = 4;
     SCI turnRight = 5;
-    SCI fast = 6;
-    SCI slow = 7;
+    SCI fast = 6; // boost/sprint
+    SCI slow = 7; // brake/crouch
     SCI attack1 = 8;
     SCI attack2 = 9;
     SCI attack3 = 10;
@@ -112,12 +112,18 @@ public:
     static bool down(KEY);    //returns whether the key is held
     static bool pressed(KEY); //returns whether the key was pressed during the last frame
     
-    static bool isCursorLocked();
+    static bool isCursorLocked(); //if the cursor is unlocked, the mouse acts normally and can be used to click on buttons
     static void lockCursor();
     static void unlockCursor();
     
-    static int mouseX(); //movement of the mouse in pixels this frame (relative)
-    static int mouseY();
+    //Mouse sensitivity does nothing on its own.
+    //When you get mouse input, you have to multiply it by the current sensitivity value.
+    //It is stored here only for convenience.
+    static void setMouseSensitivity(float);
+    static float getMouseSensitivity();
+    
+    static int mouseX(); //movement of the mouse in pixels this frame
+    static int mouseY(); //relative if the cursor is locked, absolute if unlocked
     
 private:
     static void updateKeyUp(const PhysicalKey&);
@@ -138,6 +144,7 @@ private:
     static std::vector <KEY> dirtyKeysPressed;
     
     static bool cursorLocked;
+    static float mouseSensitivity;
     
     static int x;
     static int y;

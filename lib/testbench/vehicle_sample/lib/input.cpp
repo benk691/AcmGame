@@ -11,6 +11,7 @@ std::vector <int> Input::keysPressed;
 std::vector <int> Input::dirtyKeysPressed;
 
 bool Input::cursorLocked;
+float Input::mouseSensitivity = 0.2f;
 
 int Input::x;
 int Input::y;
@@ -52,8 +53,7 @@ void processMouseButton(int button, int state, int x, int y)
 
 void processMouseMotion(int x, int y)
 {
-    if(Input::cursorLocked) Input::updateMousePosition(300 - x, 300 - y);
-    else Input::updateMousePosition(x, y);
+    Input::updateMousePosition(x, y);
 }
 
 void Input::initialize()
@@ -71,12 +71,6 @@ void Input::initialize()
 
 void Input::nextFrame()
 {
-    //std::vector <int> result(keysHeld.size() + dirtyKeysHeld.size());
-    //std::sort(keysHeld.begin(), keysHeld.end());
-    //std::sort(dirtyKeysHeld.begin(), dirtyKeysHeld.end());
-    //std::set_union(keysHeld.begin(), keysHeld.end(), dirtyKeysHeld.begin(), dirtyKeysHeld.end(), result.begin());
-    //keysHeld.swap(result);
-    //dirtyKeysHeld = keysHeld; //the dirty buffer for keys held begins with the current copy of keys held
     keysHeld = dirtyKeysHeld;
     
     keysPressed.clear();
@@ -84,7 +78,10 @@ void Input::nextFrame()
     
     x = dirtyX;
     y = dirtyY;
+    dirtyX = 0;
+    dirtyY = 0;
     
+    //keep the cursor in the middle of the window if it is locked
     if(cursorLocked) glutWarpPointer(300, 300);
 }
 
@@ -168,8 +165,16 @@ void Input::updateKeyDown(const PhysicalKey& pk)
 
 void Input::updateMousePosition(int x, int y)
 {
-    Input::dirtyX = x;
-    Input::dirtyY = y;
+    if(cursorLocked)
+    {
+        dirtyX += (x - 300);
+        dirtyY += (y - 300);
+    }
+    else
+    {
+        Input::dirtyX = x;
+        Input::dirtyY = y;
+    }
 }
 
 int Input::mouseX()
@@ -201,4 +206,14 @@ void Input::unlockCursor()
     
     cursorLocked = false;
     glutSetCursor(GLUT_CURSOR_INHERIT);
+}
+
+void Input::setMouseSensitivity(float val)
+{
+    mouseSensitivity = val;
+}
+
+float Input::getMouseSensitivity()
+{
+    return Input::mouseSensitivity;
 }

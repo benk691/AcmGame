@@ -58,7 +58,7 @@ void application::init_event()
     glShadeModel(GL_SMOOTH);
 
     // set the cameras default coordinates
-    camera.set_distance(20);
+    camera.set_distance(25);//originally 20
     camera.set_elevation(35);
     camera.set_twist(45);
 
@@ -85,10 +85,20 @@ void application::draw_event()
     // draws the grid and frame at the origin
     draw_grid();
 
+    #define PI 3.14159265358979323846264338328
+    
     //draw the vehicles
-    camera.set_focal_point(vehicles[0].x_pos,vehicles[0].y_pos + 2,vehicles[0].z_pos);
+    camera.set_focal_point(vehicles[0].x_pos + 3.2 * cos(vehicles[0].direction * PI / 180.0),vehicles[0].y_pos + 2,vehicles[0].z_pos + 3.2 * -sin(vehicles[0].direction * PI / 180.0));
 
-    camera.set_twist(vehicles[0].direction - 90);
+    static float relative_twist = 0.0f; //Yes, this is a hack.  Please fix it.
+    relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
+    while(relative_twist >= 360.0f) relative_twist -= 360.0f;
+    while(relative_twist < 0.0f) relative_twist += 360.0f;
+    camera.set_twist(vehicles[0].direction - 90 + relative_twist);
+    
+    camera.set_elevation(camera.get_elevation() + Input::mouseY() * Input::getMouseSensitivity());
+    if(camera.get_elevation() > 90.0f) camera.set_elevation(90.0f);
+    if(camera.get_elevation() < 0.0f) camera.set_elevation(0.0f);
     /*
 
     double rel_dir = vehicles[0].direction - camera.get_twist();
