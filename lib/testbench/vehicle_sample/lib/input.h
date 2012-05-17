@@ -1,6 +1,90 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
+//-----------------------------------------------------------------------------------------------------------
+// How to use this file
+//-----------------------------------------------------------------------------------------------------------
+//
+// This file wraps the input provided by GLUT.  Instead of checking if a certain key on the keyboard is held, 
+// you check a certain "logical key."  One physical key is W, while its logical key might be Key::moveForward.
+// This allows the keys to be remapped, even at runtime.
+//
+//-----------------------------------------------------------------------------------------------------------
+// Checking for key presses
+//-----------------------------------------------------------------------------------------------------------
+//
+// There is no way to check if a physical key is held.  All requests are made with logical keys defined in
+// struct Key.
+// To check if a logical key is being held, call Input::down(Key::somekey), where somekey is the name you
+// want to check.  You can also check if the key was just pressed; this lasts for only one frame.  For
+// example, you might use this method for attacks, so that the player has to let go and press the key again
+// to attack again instead of just holding the key down.  To do this, call Input::pressed(Key::somekey).
+//
+//-----------------------------------------------------------------------------------------------------------
+// Mapping keys
+//-----------------------------------------------------------------------------------------------------------
+//
+// None of the logical keys will work initially.  You have to assign a physical key to each logical key you
+// will use.  This is done with Input::mapKey(PhysicalKey(somekeyID, somekeyType), someLogicalKey).
+// One of its arguments is an object of type PhysicalKey.  This represents an actual key on the keyboard.
+// You can only use keys that GLUT represents normally.  This includes all the letters, numbers, function
+// keys, and arrow keys, plus mouse buttons.  Some keys that you might expect to find, like shift, are not 
+// available.  Be sure only to use lowercase letters, as the uppercase variants are actually considered 
+// different keys.  If you map an uppercase letter, it will probably never trigger.
+// PhysicalKey also takes a type parameter.  There are currently three choices: NORMAL_KEY, SPECIAL_KEY, and
+// MOUSE_BUTTON.  NORMAL_KEY is used for letters and numbers, and the like.  The key ID for normal keys is
+// an ASCII value; to register the W key, use PhysicalKey('w', NORMAL_KEY).  SPECIAL_KEY refers to
+// function and arrow keys, plus possibly a few more.  The keyID for these is, for example, GLUT_F1.
+// Mouse buttons are similar to function keys; use PhysicalKey(MOUSE_LEFT_BUTTON, MOUSE_BUTTON).
+// Always use the correct type for the keyID you are entering.  If you use the wrong type, you might cause
+// conflicts.
+// 
+// You can map any number of physical keys to one logical key.  Similarly, you can map multiple logical keys
+// to a single physical key.
+//
+// You can add a key mapping at any time by calling mapKey again.  To remove an existing keymapping, use
+// unmapKey(physicalkey, logicalkey) to remove a particular mapping from the physical key, or use
+// unmapKey(physicalkey) to remove all of the mappings from that key.
+//
+//-----------------------------------------------------------------------------------------------------------
+// Adding keys
+//-----------------------------------------------------------------------------------------------------------
+//
+// If, for some reason, you feel that none of the key names in Key describe what you want a key to do, you
+// can add another key name to Key.  Use the same format as the existing keys, and be sure to assign a new
+// number not used by any other key.  Just make sure there isn't a similar key that other people are already
+// using; you want each function to have only one logical key.
+// Please ask before you add keys.  There are probably enough already.
+//
+//-----------------------------------------------------------------------------------------------------------
+// Mouse input
+//-----------------------------------------------------------------------------------------------------------
+//
+// At the start, the mouse cursor is locked to the screen.  This is called relative mode.
+// In relative mode, you can use Input::mouseX() and Input::mouseY() to see how far the mouse has moved
+// this frame.  However, whenever you do this you have to multiply the result by Input::getMouseSensitivity().
+// Unfortunately, Input cannot do this for you because these functions have to return integers to be
+// compatible with absolute mode.  After doing the multiplication yourself, you have a float representing how
+// far the mouse moved this frame.
+// In relative mode, the mouse cursor is not visible.
+// If you call Input::unlockMouse(), you enter absolute mode.  In absolute mode, the mouse cursor is visible
+// and moves normally.  When you check Input::mouseX() and Input::mouseY(), you get the position of the mouse
+// cursor in pixels.  Use this for menus and RTS style controls, for example.
+// To change the mouse sensitivity, call Input::setMouseSensitivity(float).  Note that this has no effect
+// in absolute mode and you must multiply by the sensitivity yourself in relative mode.
+//
+//-----------------------------------------------------------------------------------------------------------
+// In the game loop
+//-----------------------------------------------------------------------------------------------------------
+//
+// You have to initialize the input system once before using it by calling Input::initialize.  After this you
+// can begin mapping keys.
+// You also have to call Input::nextFrame() exactly once per frame.  It doesn't matter where in the frame, but
+// it has to be consistent.  This is used to cycle the double buffers so that keys don't suddenly change
+// during a calculation.
+//
+//-----------------------------------------------------------------------------------------------------------
+
 #include <map>
 #include <vector>
 
@@ -56,7 +140,7 @@ struct Key
 
 //Immutable class representing a key or mouse button
 //To construct a PhysicalKey, pass the value glut uses for the key along with its type to the constructor.
-//For example, for the A key use PhysicalKey('A', PhysicalKey::NORMAL_KEY).
+//For example, for the A key use PhysicalKey('a', PhysicalKey::NORMAL_KEY).
 //Note that 'A' is not the same as 'a'.
 //For nonalphanumeric keys, use PhysicalKey::SPECIAL_KEY as the type and use glut's enum value for the value.
 //For mouse buttons, use the glut enum value and PhysicalKey::MOUSE_BUTTON.

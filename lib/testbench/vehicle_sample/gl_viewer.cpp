@@ -68,6 +68,8 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     Input::mapKey(PhysicalKey('l', NORMAL_KEY), Key::car2turnRight);
     Input::mapKey(PhysicalKey('u', NORMAL_KEY), Key::car2leftDoor);
     Input::mapKey(PhysicalKey('o', NORMAL_KEY), Key::car2rightDoor);
+    
+    Input::mapKey(PhysicalKey('p', NORMAL_KEY), Key::pause);
 }
 
 void gl_viewer::glut_display_event_wrapper()
