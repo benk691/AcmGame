@@ -14,6 +14,8 @@ using namespace std;
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include "lib/input.h"
+
 void draw_grid();
 
 application::application()
@@ -28,8 +30,9 @@ application::~application()
 // triggered once after the OpenGL context is initialized
 void application::init_event()
 {
-    cout << "CAMERA CONTROLS: \n  LMB: Rotate \n  MMB: Pan \n  LMB: Dolly" << endl;
-    cout << "KEYBOARD CONTROLS: \n  '=': Toggle wireframe mode" << endl;
+    //cout << "CAMERA CONTROLS: \n  LMB: Rotate \n  MMB: Pan \n  LMB: Dolly" << endl;
+    //cout << "KEYBOARD CONTROLS: \n  '=': Toggle wireframe mode" << endl;
+    cout << "CONTROLS:\n WASD: move \n QE: open doors \n F1: quit" << endl;
 
     const GLfloat ambient[] = { 0.15, 0.15, 0.15, 1.0 };
     const GLfloat diffuse[] = { 0.6, 0.6, 0.6, 1.0 };
@@ -55,7 +58,7 @@ void application::init_event()
     glShadeModel(GL_SMOOTH);
 
     // set the cameras default coordinates
-    camera.set_distance(20);
+    camera.set_distance(25);//originally 20
     camera.set_elevation(35);
     camera.set_twist(45);
 
@@ -69,6 +72,9 @@ void application::init_event()
 // triggered each time the application needs to redraw
 void application::draw_event()
 {
+    Input::nextFrame();
+    if(Input::down(Key::quit)) exit(0);
+
     // apply our camera transformation
     camera.apply_gl_transform();
 
@@ -79,10 +85,20 @@ void application::draw_event()
     // draws the grid and frame at the origin
     draw_grid();
 
+    #define PI 3.14159265358979323846264338328
+    
     //draw the vehicles
-    camera.set_focal_point(vehicles[0].x_pos,vehicles[0].y_pos + 2,vehicles[0].z_pos);
+    camera.set_focal_point(vehicles[0].x_pos + 3.2 * cos(vehicles[0].direction * PI / 180.0),vehicles[0].y_pos + 2,vehicles[0].z_pos + 3.2 * -sin(vehicles[0].direction * PI / 180.0));
 
-    camera.set_twist(vehicles[0].direction - 90);
+    static float relative_twist = 0.0f; //Yes, this is a hack.  Please fix it.
+    relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
+    while(relative_twist >= 360.0f) relative_twist -= 360.0f;
+    while(relative_twist < 0.0f) relative_twist += 360.0f;
+    camera.set_twist(vehicles[0].direction - 90 + relative_twist);
+    
+    camera.set_elevation(camera.get_elevation() + Input::mouseY() * Input::getMouseSensitivity());
+    if(camera.get_elevation() > 90.0f) camera.set_elevation(90.0f);
+    if(camera.get_elevation() < 0.0f) camera.set_elevation(0.0f);
     /*
 
     double rel_dir = vehicles[0].direction - camera.get_twist();
@@ -94,9 +110,9 @@ void application::draw_event()
 
     for(unsigned int i = 0; i < vehicles.size(); ++i){
         if(vehicles[i].use_keys)
-            vehicles[i].draw(t.elapsed()*180,up_1,down_1,left_1,right_1,left_d1,right_d1);
+            vehicles[i].draw(t.elapsed()*180, Input::down(Key::moveForward), Input::down(Key::moveBackward), Input::down(Key::turnLeft), Input::down(Key::turnRight), Input::pressed(Key::leftDoor), Input::pressed(Key::rightDoor));
         else
-            vehicles[i].draw(t.elapsed()*180,up_2,down_2,left_2,right_2,left_d2,right_d2);
+            vehicles[i].draw(t.elapsed()*180,Input::down(Key::car2moveForward),Input::down(Key::car2moveBackward),Input::down(Key::car2turnLeft),Input::down(Key::car2turnRight),Input::pressed(Key::car2leftDoor),Input::pressed(Key::car2rightDoor));
     }
 }
 // triggered when mouse is clicked

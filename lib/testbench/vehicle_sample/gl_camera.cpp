@@ -104,9 +104,11 @@ vector3 gl_camera::get_position() const
 
     p[1] = t1;
     p[2] = t2;
+    
+    #define PI 3.14159265358979323846264338328
 
     // rotate about y
-    b = get_twist() / 180.0 * M_PI;
+    b = get_twist() / 180.0 * PI;
     t1 = cos(b)*p[0] + sin(b)*p[2];
     t2 = -sin(b)*p[0] + cos(b)*p[2];
 
