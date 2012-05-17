@@ -9,6 +9,8 @@ using namespace std;
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include "lib/input.h"
+
 gl_viewer* gl_viewer::singleton = NULL;
 
 gl_viewer::gl_viewer()
@@ -36,18 +38,6 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     // called when Glut needs to display
     glutDisplayFunc(&gl_viewer::glut_display_event_wrapper);
 
-    // called when Glut has detected a mouse click
-    glutMouseFunc(&gl_viewer::glut_mouse_click_event_wrapper);
-
-    // called when Glut has detected mouse motion
-    glutMotionFunc(&gl_viewer::glut_mouse_move_event_wrapper);
-
-    // called when Glut has key input
-    glutKeyboardFunc(&gl_viewer::glut_keyboard_event_wrapper);
-
-    // called when Glut has key input
-    glutKeyboardUpFunc(&gl_viewer::glut_keyboard_up_event_wrapper);
-
     // called when GLUT has nothing to do
     glutIdleFunc(&gl_viewer::glut_display_event_wrapper);
 
@@ -62,12 +52,22 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     this->width = width;
     this->height = height;
     first_click = true;
-}
-
-void gl_viewer::run()
-{
-    // pass execution to Glut. Now Glut is in control of the main loop.
-    glutMainLoop();
+    
+    Input::initialize();
+    Input::mapKey(PhysicalKey('w', NORMAL_KEY), Key::moveForward);
+    Input::mapKey(PhysicalKey('s', NORMAL_KEY), Key::moveBackward);
+    Input::mapKey(PhysicalKey('a', NORMAL_KEY), Key::turnLeft);
+    Input::mapKey(PhysicalKey('d', NORMAL_KEY), Key::turnRight);
+    Input::mapKey(PhysicalKey('q', NORMAL_KEY), Key::leftDoor);
+    Input::mapKey(PhysicalKey('e', NORMAL_KEY), Key::rightDoor);
+    Input::mapKey(PhysicalKey(GLUT_KEY_F1, SPECIAL_KEY), Key::quit);
+    
+    Input::mapKey(PhysicalKey('i', NORMAL_KEY), Key::car2moveForward);
+    Input::mapKey(PhysicalKey('k', NORMAL_KEY), Key::car2moveBackward);
+    Input::mapKey(PhysicalKey('j', NORMAL_KEY), Key::car2turnLeft);
+    Input::mapKey(PhysicalKey('l', NORMAL_KEY), Key::car2turnRight);
+    Input::mapKey(PhysicalKey('u', NORMAL_KEY), Key::car2leftDoor);
+    Input::mapKey(PhysicalKey('o', NORMAL_KEY), Key::car2rightDoor);
 }
 
 void gl_viewer::glut_display_event_wrapper()
@@ -83,6 +83,12 @@ void gl_viewer::glut_display_event_wrapper()
     // swap the back buffer with the front (user always sees front
     // buffer on display)
     glutSwapBuffers();
+}
+
+void gl_viewer::run()
+{
+    // pass execution to Glut. Now Glut is in control of the main loop.
+    glutMainLoop();
 }
 
 void gl_viewer::glut_mouse_click_event_wrapper(int button, int state, int x, int y)
@@ -193,15 +199,6 @@ void gl_viewer::glut_mouse_move_event_wrapper(int x, int y)
     singleton->mouse_last_y = y;
 
     singleton->mouse_move_event(x, y);
-}
-
-void gl_viewer::glut_keyboard_event_wrapper(unsigned char key, int x, int y)
-{
-    singleton->keyboard_event(key, x, y);
-}
-void gl_viewer::glut_keyboard_up_event_wrapper(unsigned char key, int x, int y)
-{
-    singleton->keyboard_up_event(key, x, y);
 }
 
 void gl_viewer::glut_reshape_event_wrapper(int width, int height)
