@@ -1,2 +1,3 @@
 TODO:
     (1) Make socket communication between computers
+    (2) Use laptop to do zmq with sudo.
