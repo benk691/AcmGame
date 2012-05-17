@@ -1,2 +1,4 @@
 TODO:
     (1) Make socket communication between computers
+    (2) Configure and make zmq on your laptop, laptop is needed for sudo
+access.
