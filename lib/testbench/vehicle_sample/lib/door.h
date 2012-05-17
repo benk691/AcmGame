@@ -9,7 +9,7 @@ class Door{
         ~Door();
 
         void draw_solid();
-        void update(bool open);
+        void update(bool toggle);
         void set_open_out(bool set);
 
         bool is_broken();
@@ -23,6 +23,7 @@ class Door{
         int open_angle;
         double open_speed;
         double current_angle;
+        bool opening;
         double rel_x;
         double rel_y;
         double rel_z;
