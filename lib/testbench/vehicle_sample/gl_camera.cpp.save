@@ -25,7 +25,9 @@ void gl_camera::set_elevation(float deg)
     this->elevation = new_deg;
 }
 void gl_camera::add_elevation(float deg){
-
+    relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
+    while(relative_twist >= 360.0f) relative_twist -= 360.0f;
+    while(relative_twist < 0.0f) relative_twist += 360.0f;
 }
 
 float gl_camera::get_elevation() const
@@ -57,10 +59,7 @@ void gl_camera::set_twist(float deg)
 }
 void gl_camera::add_twist(float deg)
 {
-
-    relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
-    while(relative_twist >= 360.0f) relative_twist -= 360.0f;
-    while(relative_twist < 0.0f) relative_twist += 360.0f;
+    
 }
 float gl_camera::get_twist() const
 {

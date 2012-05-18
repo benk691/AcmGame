@@ -25,27 +25,21 @@ public:
 
 class application : public gl_viewer
 {
-public:
-    application();
-    ~application();
-    void init_event();
-    void draw_event();
-    void mouse_click_event(mouse_button button, mouse_button_state button_state,int x, int y);
-    void options_menu(int input);
-    void mouse_move_event(int x, int y);
-    void keyboard_event(unsigned char key, int x, int y);
-    void keyboard_up_event(unsigned char key, int x, int y);
-
-private:
-    bool solid;
-    bool up_1, down_1, left_1, right_1,
-         up_2, down_2, left_2, right_2,
-         left_d1, right_d1, left_d2, right_d2;
-    std::vector <Vehicle> vehicles;
-    timer t;
-    int selectedObject;
-    int resolution;
-    double distance;
+    public:
+        application();
+        ~application();
+        void init_event();
+        void draw_event();
+    private:
+        bool solid;
+        bool up_1, down_1, left_1, right_1,
+             up_2, down_2, left_2, right_2,
+             left_d1, right_d1, left_d2, right_d2;
+        std::vector <Vehicle> vehicles;
+        timer t;
+        int selectedObject;
+        int resolution;
+        double distance;
 };
 
 #endif

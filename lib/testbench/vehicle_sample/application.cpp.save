@@ -88,15 +88,11 @@ void application::draw_event()
     camera.set_focal_point(vehicles[0].x_pos + 3.2 * cos(vehicles[0].direction * PI / 180.0),vehicles[0].y_pos + 2,vehicles[0].z_pos + 3.2 * -sin(vehicles[0].direction * PI / 180.0));
     //camera.set_focal_point(vehicles[0].x_pos ,vehicles[0].y_pos + 2,vehicles[0].z_pos );
 
-    /*
     static float relative_twist = 0.0f; //Yes, this is a hack.  Please fix it.
     relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
     while(relative_twist >= 360.0f) relative_twist -= 360.0f;
     while(relative_twist < 0.0f) relative_twist += 360.0f;
     camera.set_twist(vehicles[0].direction - 90 + relative_twist);
-    */
-    //camera.set_twist(vehicles[0].direction - 90);
-    camera.add_twist(Input::mouseX()*Input::getMouseSensitivity());
 
     camera.set_elevation(camera.get_elevation() + Input::mouseY() * Input::getMouseSensitivity());
     if(camera.get_elevation() > 90.0f) camera.set_elevation(90.0f);

@@ -12,15 +12,13 @@ public:
     {}
 
     void set_elevation(float deg);
-    void add_elevation(float deg);
     float get_elevation() const;
 
     void set_twist(float deg);
-    void add_twist(float deg);
+    void delta_twist()
     float get_twist() const;
 
     void set_distance(float d);
-    void add_distance(float deg);
     float get_distance() const;
 
     void set_focal_point(const vector3& focal_point);
