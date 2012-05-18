@@ -4,8 +4,8 @@
 #include "door.h"
 
 Door::Door()
-:width(2), height(1.4), depth(.1), open_out(false), open_angle(50), open_speed(.3),
- current_angle(0), opening(false), rel_x(0), rel_y(0), rel_z(0), free(false), pitch(0)
+:free(false), width(2), height(1.4), depth(.1), open_out(false), open_angle(50), open_speed(.3),
+ current_angle(0), opening(false), rel_x(0), rel_y(0), rel_z(0), pitch(0)
 {}
 Door::~Door()
 {}
@@ -63,9 +63,6 @@ void Door::break_off(double x_val, double y_val, double z_val){
     rel_x = x_val;
     rel_y = y_val;
     rel_z = z_val;
-}
-bool Door::is_broken(){
-    return free;
 }
 void Door::set_position(double x_val, double y_val, double z_val){
     rel_x = x_val;

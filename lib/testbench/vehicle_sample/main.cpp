@@ -1,4 +1,5 @@
 #include "application.h"
+#include <iostream>
 
 #define WIDTH 800
 #define HEIGHT 600

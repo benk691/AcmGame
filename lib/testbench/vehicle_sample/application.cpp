@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
@@ -18,9 +17,7 @@ using namespace std;
 void draw_terrain();
 
 application::application()
-: solid(true), up_1(false), down_1(false), left_1(false), right_1(false),
-               up_2(false), down_2(false), left_2(false), right_2(false),
-               left_d1(false), right_d1(false), left_d2(false), right_d2(false)
+: solid(true)
 {}
 
 application::~application()
@@ -57,16 +54,16 @@ void application::init_event()
     glShadeModel(GL_SMOOTH);
 
     // set the cameras default coordinates
-    camera.set_distance(25);//originally 20
-    camera.set_elevation(35);
-    camera.set_twist(45);
+    camera.set_distance(30);//originally 20
+    camera.set_elevation(30);
+    camera.set_twist(270);
 
     t.reset();
     //
     Vehicle car_1(true,0,2.5,-3);
-    Vehicle car_2(false,0,2.5,3);
+    //Vehicle car_2(false,0,2.5,3);
     vehicles.push_back(car_1);
-    vehicles.push_back(car_2);
+    //vehicles.push_back(car_2);
 }
 // triggered each time the application needs to redraw
 void application::draw_event()
@@ -84,31 +81,15 @@ void application::draw_event()
     // draws the terrain and frame at the origin
     draw_terrain();
 
-    //draw the vehicles
+    //focus camera to the vehicle
     camera.set_focal_point(vehicles[0].x_pos + 3.2 * cos(vehicles[0].direction * PI / 180.0),vehicles[0].y_pos + 2,vehicles[0].z_pos + 3.2 * -sin(vehicles[0].direction * PI / 180.0));
-    //camera.set_focal_point(vehicles[0].x_pos ,vehicles[0].y_pos + 2,vehicles[0].z_pos );
 
-    /*
-    static float relative_twist = 0.0f; //Yes, this is a hack.  Please fix it.
-    relative_twist -= Input::mouseX() * Input::getMouseSensitivity();
-    while(relative_twist >= 360.0f) relative_twist -= 360.0f;
-    while(relative_twist < 0.0f) relative_twist += 360.0f;
-    camera.set_twist(vehicles[0].direction - 90 + relative_twist);
-    */
-    //camera.set_twist(vehicles[0].direction - 90);
-    camera.add_twist(Input::mouseX()*Input::getMouseSensitivity());
+    //use the mouse to rotate the camera
+    //camera.add_twist(Input::mouseX()*Input::getMouseSensitivity());
+    //camera.add_elevation(Input::mouseY()*Input::getMouseSensitivity());
 
-    camera.set_elevation(camera.get_elevation() + Input::mouseY() * Input::getMouseSensitivity());
-    if(camera.get_elevation() > 90.0f) camera.set_elevation(90.0f);
-    if(camera.get_elevation() < 0.0f) camera.set_elevation(0.0f);
-    /*
-
-    double rel_dir = vehicles[0].direction - camera.get_twist();
-    if(rel_dir > 95)
-        camera.set_twist(camera.get_twist() + .1);
-    else if(rel_dir < 85)
-        camera.set_twist(camera.get_twist() - .1);
-    */
+    camera.add_twist(vehicles[0].direction + vehicles[0].turn);
+    camera.add_distance(vehicles[0].speed);
 
     for(unsigned int i = 0; i < vehicles.size(); ++i){
         if(vehicles[i].use_keys)
@@ -164,7 +145,7 @@ void draw_terrain()
     glColor3f(.20, .20, .20);
     glBegin(GL_LINES);
 
-    int ncells = 100;
+    int ncells = 250;
     int ncells2 = ncells/2;
 
     for (int i= 0; i <= ncells; i++)

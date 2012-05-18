@@ -32,9 +32,6 @@ class application : public gl_viewer
         void draw_event();
     private:
         bool solid;
-        bool up_1, down_1, left_1, right_1,
-             up_2, down_2, left_2, right_2,
-             left_d1, right_d1, left_d2, right_d2;
         std::vector <Vehicle> vehicles;
         timer t;
         int selectedObject;

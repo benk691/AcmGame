@@ -10,6 +10,7 @@ public:
         elevation(0.0), twist(0.0),
         focal_point(0.0, 0.0, 0.0)
     {}
+    ~gl_camera(){}
 
     void set_elevation(float deg);
     void add_elevation(float deg);
@@ -19,7 +20,7 @@ public:
     void add_twist(float deg);
     float get_twist() const;
 
-    void set_distance(float d);
+    void set_distance(float abs_d);
     void add_distance(float deg);
     float get_distance() const;
 
@@ -37,6 +38,7 @@ public:
 
 private:
     float distance;
+    float abs_distance;
     float elevation, twist;
     vector3 focal_point;
 

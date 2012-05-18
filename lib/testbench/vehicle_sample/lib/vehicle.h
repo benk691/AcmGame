@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #include <cmath>
 #include "door.h"
+//#include "weapon.h"
 
 class Hubcap
 {
@@ -12,11 +13,13 @@ class Hubcap
         :p(gluNewQuadric()),red(.5), green(.5), blue(0)
         {}
         ~Hubcap()
-        {}
+        {
+            gluDeleteQuadric(p);
+        }
         void draw(){
 
-            int num_spokes = 16;
-            double spoke_width = .05;
+            int num_spokes = 4;
+            double spoke_width = .2;
             double angle_step = 360.0/num_spokes;
 
             glPushMatrix();
@@ -73,16 +76,23 @@ class Vehicle
         Vehicle(bool keys, double x, double y, double z);
         ~Vehicle();
         void draw(double counter,bool up, bool down, bool left, bool right, bool left_open, bool right_open);
+        void set_max_speed(double max);
         bool use_keys;
         double x_pos;
         double y_pos;
         double z_pos;
         double direction;
         double speed;
-    private:
         double turn;
+    private:
+        double max_speed;
+        double turn_limit;
         Tire wheels[4];
         Door doors[2];
+
+        //Weapon attack_item;
+        //Weapon defend_item;
+        //Weapon bonus_item;
 };
 
 #endif
