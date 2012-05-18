@@ -20,12 +20,149 @@ int Input::dirtyY;
 
 void processNormalKeyDown(unsigned char key, int x, int y)
 {
+    if(key >= 'A' && key <= 'Z') key += 'a' - 'A';
+    
+    switch(key)
+    {
+        case '!':
+            key = '1';
+            break;
+        case '@':
+            key = '2';
+            break;
+        case '#':
+            key = '3';
+            break;
+        case '$':
+            key = '4';
+            break;
+        case '%':
+            key = '5';
+            break;
+        case '^':
+            key = '6';
+            break;
+        case '&':
+            key = '7';
+            break;
+        case '*':
+            key = '8';
+            break;
+        case '(':
+            key = '9';
+            break;
+        case ')':
+            key = '0';
+            break;
+        case '_':
+            key = '-';
+            break;
+        case '+':
+            key = '=';
+            break;
+        case '{':
+            key = '[';
+            break;
+        case '}':
+            key = ']';
+            break;
+        case '|':
+            key = '\\';
+            break;
+        case ':':
+            key = ';';
+            break;
+        case '\"':
+            key = '\'';
+            break;
+        case '<':
+            key = ',';
+            break;
+        case '>':
+            key = '.';
+            break;
+        case '?':
+            key = '/';
+            break;
+        case '~':
+            key = '`';
+            break;
+    }
+
     PhysicalKey pk(key, NORMAL_KEY);
     Input::updateKeyDown(pk);
 }
 
 void processNormalKeyUp(unsigned char key, int x, int y)
 {
+    if(key >= 'A' && key <= 'Z') key += 'a' - 'A';
+    
+    switch(key)
+    {
+        case '!':
+            key = '1';
+            break;
+        case '@':
+            key = '2';
+            break;
+        case '#':
+            key = '3';
+            break;
+        case '$':
+            key = '4';
+            break;
+        case '%':
+            key = '5';
+            break;
+        case '^':
+            key = '6';
+            break;
+        case '&':
+            key = '7';
+            break;
+        case '*':
+            key = '8';
+            break;
+        case '(':
+            key = '9';
+            break;
+        case ')':
+            key = '0';
+            break;
+        case '_':
+            key = '-';
+            break;
+        case '+':
+            key = '=';
+            break;
+        case '{':
+            key = '[';
+            break;
+        case '}':
+            key = ']';
+            break;
+        case '|':
+            key = '\\';
+            break;
+        case ':':
+            key = ';';
+            break;
+        case '\"':
+            key = '\'';
+            break;
+        case '<':
+            key = ',';
+            break;
+        case '>':
+            key = '.';
+            break;
+        case '?':
+            key = '/';
+            break;
+        case '~':
+            key = '`';
+            break;
+    }
     PhysicalKey pk(key, NORMAL_KEY);
     Input::updateKeyUp(pk);
 }
