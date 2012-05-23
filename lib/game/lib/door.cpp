@@ -4,13 +4,13 @@
 #include "door.h"
 
 Door::Door()
-:free(false), width(2), height(1.4), depth(.1), open_out(false), open_angle(50), open_speed(.3),
+:free(false), width(2), height(1.4), depth(.1), open_out(false), open_angle(50), open_speed(.5),
  current_angle(0), opening(false), rel_x(0), rel_y(0), rel_z(0), pitch(0)
 {}
 Door::~Door()
 {}
 
-void Door::update(bool toggle){
+void Door::draw(bool toggle){
     if(not free){
         if(toggle) opening = !opening;
         if(opening){
@@ -22,9 +22,7 @@ void Door::update(bool toggle){
                 current_angle -= open_speed;
         }
     }
-    draw_solid();
-}
-void Door::draw_solid(){
+
     glPushMatrix();
         glTranslatef(rel_x, rel_y, rel_z);
         if(open_out){
@@ -60,9 +58,9 @@ void Door::set_open_out(bool set){
 void Door::break_off(double x_val, double y_val, double z_val){
     current_angle = 0;
     free = true;
-    rel_x = x_val;
-    rel_y = y_val;
-    rel_z = z_val;
+    rel_x += x_val;
+    rel_y += y_val;
+    rel_z += z_val;
 }
 void Door::set_position(double x_val, double y_val, double z_val){
     rel_x = x_val;

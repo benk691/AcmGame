@@ -52,7 +52,7 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     this->width = width;
     this->height = height;
     first_click = true;
-    
+
     Input::initialize();
     Input::mapKey(PhysicalKey('w', NORMAL_KEY), Key::moveForward);
     Input::mapKey(PhysicalKey('s', NORMAL_KEY), Key::moveBackward);
@@ -61,14 +61,14 @@ void gl_viewer::init(int argc, char *argv[], int width, int height)
     Input::mapKey(PhysicalKey('q', NORMAL_KEY), Key::leftDoor);
     Input::mapKey(PhysicalKey('e', NORMAL_KEY), Key::rightDoor);
     Input::mapKey(PhysicalKey(GLUT_KEY_F1, SPECIAL_KEY), Key::quit);
-    
+
     Input::mapKey(PhysicalKey('i', NORMAL_KEY), Key::car2moveForward);
     Input::mapKey(PhysicalKey('k', NORMAL_KEY), Key::car2moveBackward);
     Input::mapKey(PhysicalKey('j', NORMAL_KEY), Key::car2turnLeft);
     Input::mapKey(PhysicalKey('l', NORMAL_KEY), Key::car2turnRight);
     Input::mapKey(PhysicalKey('u', NORMAL_KEY), Key::car2leftDoor);
     Input::mapKey(PhysicalKey('o', NORMAL_KEY), Key::car2rightDoor);
-    
+
     Input::mapKey(PhysicalKey('p', NORMAL_KEY), Key::pause);
 }
 
@@ -217,7 +217,7 @@ void gl_viewer::glut_reshape_event_wrapper(int width, int height)
     // set up perspective projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, width / (float)height, 0.1f, 100.0f);
+    gluPerspective(45.0f, width / (float)height, 0.1f, 500.0f);
     glMatrixMode(GL_MODELVIEW);
 }
 

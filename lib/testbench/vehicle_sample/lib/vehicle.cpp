@@ -5,15 +5,19 @@
 //this is the vehicle class implementation
 
 Vehicle::Vehicle()
-:use_keys(false), x_pos(0), y_pos(0), z_pos(0), direction(0.0), speed (0), turn (0.0)
+:use_keys(false), x_pos(0), y_pos(0), z_pos(0), direction(0.0), speed (0), turn (0.0), max_speed(.3), turn_limit(0)
 {
     wheels[0] = Tire();
     wheels[1] = Tire();
     wheels[2] = Tire();
     wheels[3] = Tire();
-    
+
     doors[0] = Door();
     doors[1] = Door();
+
+    //attack_item = Weapon();
+    //defend_item = Weapon();
+    //bonus_item = Weapon();
 
     doors[0].set_open_out(true);
     doors[1].set_open_out(false);
@@ -22,13 +26,13 @@ Vehicle::Vehicle()
     doors[1].set_position(1.0,0.0,1.5);
 }
 Vehicle::Vehicle(bool keys, double x, double y, double z)
-:use_keys(keys), x_pos(x), y_pos(y), z_pos(z), direction(0.0), speed (0), turn (0.0)
+:use_keys(keys), x_pos(x), y_pos(y), z_pos(z), direction(0.0), speed (0), turn (0.0), max_speed(.3), turn_limit(0)
 {
     wheels[0] = Tire();
     wheels[1] = Tire();
     wheels[2] = Tire();
     wheels[3] = Tire();
-    
+
     doors[0] = Door();
     doors[1] = Door();
 
@@ -53,7 +57,7 @@ void Vehicle::draw(double counter,bool up, bool down, bool left, bool right, boo
     turn *= .99;   //friction effect, (wheels realign over time)
 
     //change vehicle's direction based on speed and wheel angle
-    direction += 11*speed*sin(turn*0.0174532925);
+    direction += 8*speed*sin(turn*0.0174532925);
 
     //fix the direction to keep nice ranges
     while(direction > 360)
@@ -62,31 +66,32 @@ void Vehicle::draw(double counter,bool up, bool down, bool left, bool right, boo
         direction += 360;
 
     if(up)
-        if(speed < .06)
-            speed += .0003;   //accelerate
+        if(speed < max_speed)
+            speed += .0006;   //accelerate
 
     if(down){
-        if(speed > -.06)
-            speed -= .0003;   //decelerate
+        if(speed > -max_speed)
+            speed -= .0006;   //decelerate
     }
 
     if(left xor right){       //won't turn left AND right
+        turn_limit = 1.1 - speed/max_speed;
         if(left){
-            if(turn < 45)     //max turn angle
+            if(turn < 45*turn_limit)     //max turn angle
                 turn += 0.4;  //turn speed left
         }
         if(right){
-            if(turn > -45)
+            if(turn > -45*turn_limit)
                 turn -= 0.4;  //turn speed right
         }
     }
     // yeah, this snaps a door off if you turn to too much
-    if(turn > 30 and not doors[0].is_broken())
+    if(turn > 30 and not doors[0].free)
         doors[0].break_off(x_pos + 4.0,y_pos,z_pos - 1.5);
 
     //draw doors where they fell off, not with car
-    if(doors[0].is_broken()) doors[0].update(false);
-    if(doors[1].is_broken()) doors[1].update(false);
+    if(doors[0].free) doors[0].update(false);
+    if(doors[1].free) doors[1].update(false);
 
     glPushMatrix();
         glTranslatef(x_pos, y_pos, z_pos);
@@ -101,8 +106,8 @@ void Vehicle::draw(double counter,bool up, bool down, bool left, bool right, boo
 
         //doors
         //draw doors with the car
-        if(not doors[0].is_broken()) doors[0].update(left_open);
-        if(not doors[1].is_broken()) doors[1].update(right_open);
+        if(not doors[0].free) doors[0].update(left_open);
+        if(not doors[1].free) doors[1].update(right_open);
 
         //body
         glPushMatrix();
@@ -142,4 +147,7 @@ void Vehicle::draw(double counter,bool up, bool down, bool left, bool right, boo
             glDisable (GL_BLEND);
         glPopMatrix();
     glPopMatrix();
+}
+void Vehicle::set_max_speed(double max){
+    max_speed = max;
 }
