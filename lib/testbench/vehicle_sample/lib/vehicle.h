@@ -14,7 +14,7 @@ class Hubcap
         {}
         ~Hubcap()
         {
-            gluDeleteQuadric(p);
+            //gluDeleteQuadric(p);
         }
         void draw(){
 
