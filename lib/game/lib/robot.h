@@ -1,10 +1,13 @@
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
+
 #include <cmath>
 #include "door.h"
-//#include "weapon.h"
+#include "weapon.h"
 
 class Hubcap
 {
@@ -17,9 +20,8 @@ class Hubcap
             //gluDeleteQuadric(p);
         }
         void draw(){
-
             int num_spokes = 4;
-            double spoke_width = .2;
+            double spoke_width = .05;
             double angle_step = 360.0/num_spokes;
 
             glPushMatrix();
@@ -43,19 +45,27 @@ class Tire
 {
     public:
         Tire()
+        :free(false), rel_x(0.0), rel_y(0.0), rel_z(0.0),my_cap(Hubcap()), angle(0), pitch(0)
         {}
         ~Tire()
         {}
-        void draw(double x, double y, double z, double spin, double turn){
+        void draw(double spin, double turn){
 
             angle -= spin*38.1971863;
 
             glPushMatrix();
-                glTranslatef(x, y, z);
+                glTranslatef(rel_x, rel_y, rel_z);
                 //glScalef(1, 1, 0.5);
-
-                glRotatef(turn, 0, 1, 0);
-                glRotatef(angle, 0, 0, 1);
+                if(free){
+                    if(rel_y > 0) rel_y -= .01;
+                    if(pitch < 90) pitch += .5;
+                    glRotatef(pitch,1,0,0);
+                    glTranslatef(0, -1.5, 0);
+                }
+                else{
+                    glRotatef(turn, 0, 1, 0);
+                    glRotatef(angle, 0, 0, 1);
+                }
 
                 my_cap.draw();
 
@@ -65,18 +75,40 @@ class Tire
                 glutSolidTorus(0.5, 1, 10, 10);
             glPopMatrix();
         }
+        void update(){
+
+        }
+        void break_off(double x_val, double y_val, double z_val){
+            free = true;
+            rel_x += x_val;
+            rel_y += y_val;
+            rel_z += z_val;
+        }
+        void set_position(double x_val, double y_val, double z_val){
+            rel_x = x_val;
+            rel_y = y_val;
+            rel_z = z_val;
+        }
+        bool free;
     private:
+        double rel_x;
+        double rel_y;
+        double rel_z;
         Hubcap my_cap;
         double angle;
+        double pitch;
 };
-class Vehicle
+class Robot
 {
     public:
-        Vehicle();
-        Vehicle(bool keys, double x, double y, double z);
-        ~Vehicle();
-        void draw(double counter,bool up, bool down, bool left, bool right, bool left_open, bool right_open);
-        void set_max_speed(double max);
+        Robot();
+        Robot(bool keys, double x, double y, double z);
+        ~Robot();
+        void collision();
+        void draw(double counter,bool up, bool down, bool left, bool right, bool left_open, bool right_open, bool attack);
+        void snap_item();
+        void move_back();
+        bool attacking();
         bool use_keys;
         double x_pos;
         double y_pos;
@@ -84,15 +116,14 @@ class Vehicle
         double direction;
         double speed;
         double turn;
-    private:
         double max_speed;
-        double turn_limit;
+        double max_turn;
+    private:
+        double x_prev;
+        double z_prev;
         Tire wheels[4];
         Door doors[2];
-
-        //Weapon attack_item;
-        //Weapon defend_item;
-        //Weapon bonus_item;
+        Weapon my_weapon;
 };
 
 #endif

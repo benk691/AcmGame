@@ -6,8 +6,9 @@
 
 #include "gl_viewer.h"
 #include "timer.h"
-#include "lib/vehicle.h"
+#include "lib/robot.h"
 #include "lib/door.h"
+#include "lib/mesh.h"
 
 class line_segment
 {
@@ -25,18 +26,19 @@ public:
 
 class application : public gl_viewer
 {
-    public:
-        application();
-        ~application();
-        void init_event();
-        void draw_event();
-    private:
-        bool solid;
-        std::vector <Vehicle> vehicles;
-        timer t;
-        int selectedObject;
-        int resolution;
-        double distance;
+public:
+    application();
+    ~application();
+    void init_event();
+    void draw_event();
+
+private:
+    std::vector <Robot> robots;
+    timer t;
+    float prev_time;
+    int selectedObject;
+    int resolution;
+    double distance;
 };
 
 #endif

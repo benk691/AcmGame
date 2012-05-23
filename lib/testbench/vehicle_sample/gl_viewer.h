@@ -24,7 +24,6 @@ class gl_viewer
             BUTTON_DOWN = GLUT_DOWN // button is being pressed
         };
 
-
         // Polymorphic callback events. Implement in inheriting subclass.
         //
         // draw_event is called by glut when the screen needs to be
